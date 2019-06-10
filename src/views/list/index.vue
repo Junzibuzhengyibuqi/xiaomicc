@@ -24,6 +24,7 @@
       v-model="txt"
     ></el-input>
     <el-button
+    v-if="!filg"
       type="primary"
       @click="seche"
       style="height:35px;width:70px ;position: relative;right:-68.5%;top:1px"

@@ -3,12 +3,14 @@
     <div>
       <el-row style="float:right; padding-right:30px">
         <div style="height:80px;width:500px">
-          <el-input
-            v-model="inputS"
-            placeholder="请输入要查找的用户id"
-            style="float:left;width:300px;padding-right:10px"
-          ></el-input>
-          <el-button type="success" @click="searchGoods(inputS)" style="float:left">查找</el-button>
+          <input
+            placeholder="请输入要查找的用户名"
+            style="float:left;width:300px;padding-right:10px;height:40px;"
+            type="text"
+            v-model="sousuo"
+            @keyup.enter="searchGoods"
+          >
+          <el-button type="success" @click="searchGoods" style="float:left">查找</el-button>
           <el-button type="primary" @click="addEquipment" style="float:left">新增</el-button>
         </div>
         <el-dialog :title="titleMap[dialogStatus]" :visible.sync="dialogFormVisible" width="50%">
@@ -17,7 +19,7 @@
               <el-input v-model="form.username"></el-input>
             </el-form-item>
             <el-form-item label="密码" v-if="show">
-              <el-input v-model="form.password"></el-input>
+              <el-input v-model="form.password" type="password"></el-input>
             </el-form-item>
             <el-form-item label="昵称">
               <el-input v-model="form.nickName"></el-input>
@@ -92,6 +94,8 @@ export default {
   name: 'user_m',
   data() {
     return {
+      sssss: false,
+      sousuo: '',
       show: true,
       inputS: '',
       dialogFormVisible: false,
@@ -114,22 +118,9 @@ export default {
     }
   },
   methods: {
-    // 搜索指定用户信息
-    searchGoods(value) {
-      axios
-        .get('http://api.cat-shop.penkuoer.com/api/v1/admin/users/' + value, {
-          headers: {
-            authorization: `Bearer ${this.token}`
-          }
-        })
-        .then(res => {
-          console.log(res)
-          // this.form.username = res.data.userName
-          // this.form.password = res.data.password
-          // this.form.nickName = res.data.nickName
-          this.form = res.data
-          this.allcount = res.data.totalCount
-        })
+    searchGoods() {
+      this.sssss = !this.sssss
+      this.loadData()
     },
     //////
     handleAvatarSuccess(res, file) {
@@ -194,20 +185,39 @@ export default {
     },
     async loadData() {
       try {
-        const result = await axios.get(
-          'http://api.cat-shop.penkuoer.com/api/v1/admin/users',
-          {
-            headers: {
-              authorization: `Bearer ${this.token}`
-            },
-            params: {
-              page: this.currentPage
+        if (!this.sssss) {
+          const result = await axios.get(
+            'http://api.cat-shop.penkuoer.com/api/v1/admin/users',
+            {
+              headers: {
+                authorization: `Bearer ${this.token}`
+              },
+              params: {
+                page: this.currentPage
+              }
             }
-          }
-        )
-        this.people = result.data.users
-        this.allcount = result.data.totalCount
-        // console.log(this.people)
+          )
+          this.people = result.data.users
+          this.allcount = result.data.totalCount
+          // console.log(this.people)
+          console.log(this.sousuo)
+        } else {
+          const result = await axios.get(
+            'http://api.cat-shop.penkuoer.com/api/v1/admin/users',
+            {
+              headers: {
+                authorization: `Bearer ${this.token}`
+              },
+              params: {
+                userName: this.sousuo
+              }
+            }
+          )
+          this.people = result.data.users
+          this.allcount = result.data.totalCount
+          // console.log(this.people)
+          console.log(this.sousuo)
+        }
       } catch (err) {
         console.log(err)
       }
