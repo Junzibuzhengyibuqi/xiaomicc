@@ -284,7 +284,7 @@ export default {
 
     //删除商品信息
     dele(v) {
-      this.$confirm('此操作将永久删除该项订单数据, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该项商品数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
